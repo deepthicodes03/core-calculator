@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>The Core Calculator</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: #0b1020;
+    color: white;
+    min-height: 100vh;
+}
+
+header {
+    padding: 25px;
+    text-align: center;
+    background: #111936;
+    border-bottom: 1px solid #273252;
+}
+
+header h1 {
+    font-size: 32px;
+    margin-bottom: 8px;
+}
+
+header p {
+    color: #aeb8d4;
+}
+
+.container {
+    max-width: 1100px;
+    margin: auto;
+    padding: 25px;
+}
+
+.panel {
+    background: #141c36;
+    padding: 25px;
+    border-radius: 16px;
+    margin-bottom: 25px;
+    border: 1px solid #273252;
+}
+
+.panel h2 {
+    margin-bottom: 20px;
+}
+
+.inputs {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 18px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    color: #b9c3dc;
+}
+
+input,
+select {
+    width: 100%;
+    padding: 13px;
+    border-radius: 10px;
+    border: 1px solid #394565;
+    background: #0d142a;
+    color: white;
+    font-size: 15px;
+}
+
+button {
+    width: 100%;
+    padding: 15px;
+    margin-top: 22px;
+    border: none;
+    border-radius: 10px;
+    background: #5b7cff;
+    color: white;
+    font-size: 17px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #4668ed;
+}
+
+.subject-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 18px;
+}
+
+.subject-card {
+    background: #10172d;
+    border: 1px solid #2b3759;
+    border-radius: 15px;
+    padding: 20px;
+}
+
+.subject-card h3 {
+    margin-bottom: 15px;
+}
+
+.subject-card input {
+    margin-bottom: 10px;
+}
+
+.result-card {
+    background: #10172d;
+    border: 1px solid #2b3759;
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 18px;
+}
+
+.result-card h3 {
+    margin-bottom: 15px;
+}
+
+.stat {
+    display: flex;
+    justify-content: space-between;
+    margin: 9px 0;
+    color: #c5cee4;
+}
+
+.progress {
+    width: 100%;
+    height: 12px;
+    background: #252e49;
+    border-radius: 20px;
+    overflow: hidden;
+    margin: 12px 0;
+}
+
+.progress-bar {
+    height: 100%;
+    border-radius: 20px;
+    background: #5b7cff;
+}
+
+.status {
+    padding: 9px;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: bold;
+    margin-top: 12px;
+}
+
+.safe {
+    background: #143b2c;
+    color: #6dffb0;
+}
+
+.warning {
+    background: #463817;
+    color: #ffd966;
+}
+
+.danger {
+    background: #451b25;
+    color: #ff7b91;
+}
+
+.irreversible {
+    background: #650d1d;
+    border: 2px solid #ff304f;
+    color: #ff667d;
+    padding: 18px;
+    border-radius: 12px;
+    margin-top: 15px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.summary-box {
+    background: #10172d;
+    padding: 20px;
+    border-radius: 14px;
+    border: 1px solid #2b3759;
+    text-align: center;
+}
+
+.summary-box h3 {
+    font-size: 28px;
+    margin-top: 8px;
+}
+
+.hidden {
+    display: none;
+}
+
+footer {
+    text-align: center;
+    color: #7e89a7;
+    padding: 30px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>⚡ The Core Calculator</h1>
+    <p>Smart Attendance & Recovery Calculator</p>
+</header>
+
+<div class="container">
+
+    <!-- INPUT SECTION -->
+    <div class="panel">
+
+        <h2>Student Details</h2>
+
+        <div class="inputs">
+
+            <div>
+                <label>Class Section</label>
+
+                <select id="section">
+                    <option value="A">Section A</option>
+                    <option value="B">Section B</option>
+                    <option value="C">Section C</option>
+                    <option value="D">Section D</option>
+                    <option value="E">Section E</option>
+                    <option value="F">Section F</option>
+                    <option value="G">Section G</option>
+                    <option value="H">Section H</option>
+                    <option value="I">Section I</option>
+                    <option value="J">Section J</option>
+                </select>
+
+            </div>
+
+            <div>
+                <label>Today's Date</label>
+                <input type="date" id="today">
+            </div>
+
+            <div>
+                <label>Planning / Future Date</label>
+                <input type="date" id="futureDate">
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- SUBJECT INPUTS -->
+    <div class="panel">
+
+        <h2>Enter Attendance</h2>
+
+        <div class="subject-grid" id="subjects"></div>
+
+        <button onclick="calculateAttendance()">
+            Calculate Attendance
+        </button>
+
+    </div>
+
+
+    <!-- RESULTS -->
+    <div id="results" class="hidden">
+
+        <div class="panel">
+
+            <h2>📊 Attendance Summary</h2>
+
+            <div class="summary">
+
+                <div class="summary-box">
+                    <p>Total Subjects</p>
+                    <h3 id="totalSubjects">0</h3>
+                </div>
+
+                <div class="summary-box">
+                    <p>Classes Remaining</p>
+                    <h3 id="totalRemaining">0</h3>
+                </div>
+
+                <div class="summary-box">
+                    <p>Subjects At Risk</p>
+                    <h3 id="riskSubjects">0</h3>
+                </div>
+
+                <div class="summary-box">
+                    <p>Subjects Below 90%</p>
+                    <h3 id="below90">0</h3>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="panel">
+
+            <h2>Subject Results</h2>
+
+            <div id="resultContainer"></div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<footer>
+    The Core Calculator • Attendance Planning System
+</footer>
+
+
+<script>
+
+/*
+====================================================
+SUBJECTS
+====================================================
+*/
+
+const subjects = [
+    "Mathematics",
+    "Physics",
+    "Chemistry",
+    "Programming in C",
+    "English",
+    "Engineering Graphics"
+];
+
+
+/*
+====================================================
+SAMPLE TIMETABLE
+====================================================
+
+Replace these numbers with the actual dataset
+provided by your college/VibeCraft.
+
+Number = classes per week.
+*/
+
+const timetable = {
+
+    A: {
+        "Mathematics": 5,
+        "Physics": 4,
+        "Chemistry": 4,
+        "Programming in C": 5,
+        "English": 3,
+        "Engineering Graphics": 3
+    },
+
+    B: {
+        "Mathematics": 5,
+        "Physics": 4,
+        "Chemistry": 4,
+        "Programming in C": 5,
+        "English": 3,
+        "Engineering Graphics": 3
+    },
+
+    C: {
+        "Mathematics": 5,
+        "Physics": 4,
+        "Chemistry": 4,
+        "Programming in C": 5,
+        "English": 3,
+        "Engineering Graphics": 3
+    },
+
+    D: {
+        "Mathematics": 5,
+        "Physics": 4,
+        "Chemistry": 4,
+        "Programming in C": 5,
+        "English": 3,
+        "Engineering Graphics": 3
+    },
+
+    E: {
+        "Mathematics": 5,
+        "Physics": 4,
+        "Chemistry": 4,
+        "Programming in C": 5,
+        "English": 3,
+        "Engineering Graphics": 3
+    },
+
+    F: {
+        "Mathematics": 5,
+        "Physics": 4,
+        "Chemistry": 4,
+        "Programming in C": 5,
+        "English": 3,
+        "Engineering Graphics": 3
+    },
+
+    G: {
+        "Mathematics": 5,
+        "Physics": 4,
+        "Chemistry": 4,
+        "Programming in C": 5,
+        "English": 3,
+        "Engineering Graphics": 3
+    },
+
+    H: {
+        "Mathematics": 5,
+        "Physics": 4,
+        "Chemistry": 4,
+        "Programming in C": 5,
+        "English": 3,
+        "Engineering Graphics": 3
+    },
+
+    I: {
+        "Mathematics": 5,
+        "Physics": 4,
+        "Chemistry": 4,
+        "Programming in C": 5,
+        "English": 3,
+        "Engineering Graphics": 3
+    },
+
+    J: {
+        "Mathematics": 5,
+        "Physics": 4,
+        "Chemistry": 4,
+        "Programming in C": 5,
+        "English": 3,
+        "Engineering Graphics": 3
+    }
+
+};
+
+
+/*
+====================================================
+SET TODAY'S DATE
+====================================================
+*/
+
+const todayInput = document.getElementById("today");
+const futureInput = document.getElementById("futureDate");
+
+const today = new Date();
+
+todayInput.value = formatDate(today);
+
+
+/*
+Default future date = 30 days from today
+*/
+
+let defaultFuture = new Date();
+defaultFuture.setDate(defaultFuture.getDate() + 30);
+
+futureInput.value = formatDate(defaultFuture);
+
+
+function formatDate(date) {
+
+    return date.toISOString().split("T")[0];
+
+}
+
+
+/*
+====================================================
+CREATE SUBJECT INPUT CARDS
+====================================================
+*/
+
+const subjectContainer = document.getElementById("subjects");
+
+subjects.forEach(subject => {
+
+    const card = document.createElement("div");
+
+    card.className = "subject-card";
+
+    card.innerHTML = `
+
+        <h3>${subject}</h3>
+
+        <label>Classes Conducted</label>
+
+        <input
+            type="number"
+            min="0"
+            id="${subject}-conducted"
+            placeholder="Example: 40"
+        >
+
+        <label>Classes Attended</label>
+
+        <input
+            type="number"
+            min="0"
+            id="${subject}-attended"
+            placeholder="Example: 35"
+        >
+
+    `;
+
+    subjectContainer.appendChild(card);
+
+});
+
+
+/*
+====================================================
+COUNT WEEKDAYS
+====================================================
+*/
+
+function countWeekdays(startDate, endDate) {
+
+    let count = 0;
+
+    let current = new Date(startDate);
+
+    while (current <= endDate) {
+
+        const day = current.getDay();
+
+        /*
+        Sunday = 0
+        Saturday = 6
+        */
+
+        if (day !== 0 && day !== 6) {
+            count++;
+        }
+
+        current.setDate(current.getDate() + 1);
+    }
+
+    return count;
+}
+
+
+/*
+====================================================
+CALCULATE ATTENDANCE
+====================================================
+*/
+
+function calculateAttendance() {
+
+    const section = document.getElementById("section").value;
+
+    const start = new Date(
+        document.getElementById("today").value
+    );
+
+    const end = new Date(
+        document.getElementById("futureDate").value
+    );
+
+
+    if (end <= start) {
+
+        alert("Please select a future date.");
+
+        return;
+
+    }
+
+
+    const weekdays = countWeekdays(start, end);
+
+    const resultContainer =
+        document.getElementById("resultContainer");
+
+    resultContainer.innerHTML = "";
+
+
+    let totalRemaining = 0;
+    let riskSubjects = 0;
+    let below90 = 0;
+
+
+    subjects.forEach(subject => {
+
+        const conducted =
+            Number(
+                document.getElementById(
+                    `${subject}-conducted`
+                ).value
+            );
+
+        const attended =
+            Number(
+                document.getElementById(
+                    `${subject}-attended`
+                ).value
+            );
+
+
+        if (
+            conducted < 0 ||
+            attended < 0 ||
+            attended > conducted
+        ) {
+
+            alert(
+                `Please enter valid values for ${subject}.`
+            );
+
+            return;
+
+        }
+
+
+        /*
+        Current attendance
+        */
+
+        let currentPercentage = 0;
+
+        if (conducted > 0) {
+
+            currentPercentage =
+                (attended / conducted) * 100;
+
+        }
+
+
+        /*
+        Classes remaining based on weekly timetable
+        */
+
+        const weeklyClasses =
+            timetable[section][subject];
+
+
+        const remainingClasses =
+            Math.floor(
+                (weekdays / 5) * weeklyClasses
+            );
+
+
+        totalRemaining += remainingClasses;
+
+
+        /*
+        Number of classes required to reach 90%
+        */
+
+        let required90 = 0;
+
+
+        /*
+        Solve:
+
+        (attended + x)
+        ---------------- >= 0.90
+        (conducted + x)
+
+        */
+
+        if (currentPercentage < 90) {
+
+            required90 =
+                Math.ceil(
+                    (0.90 * conducted - attended)
+                    / 0.10
+                );
+
+            if (required90 < 0) {
+                required90 = 0;
+            }
+
+            below90++;
+
+        }
+
+
+        /*
+        Can the student recover?
+        */
+
+        const possibleFinalPercentage =
+            (
+                (attended + remainingClasses)
+                /
+                (conducted + remainingClasses)
+            ) * 100;
+
+
+        let status = "";
+        let statusClass = "";
+
+
+        if (currentPercentage >= 90) {
+
+            status = "SAFE";
+            statusClass = "safe";
+
+        }
+
+        else if (
+            required90 <= remainingClasses &&
+            possibleFinalPercentage >= 90
+        ) {
+
+            status =
+                `Need ${required90} classes to reach 90%`;
+
+            statusClass = "warning";
+
+            riskSubjects++;
+
+        }
+
+        else {
+
+            status =
+                "Cannot recover to 90%";
+
+            statusClass = "danger";
+
+            riskSubjects++;
+
+        }
+
+
+        /*
+        Danger-zone calculation
+        */
+
+        const dangerLimit = 75;
+
+
+        let required75 = 0;
+
+
+        if (currentPercentage < dangerLimit) {
+
+            required75 =
+                Math.ceil(
+                    (0.75 * conducted - attended)
+                    / 0.25
+                );
+
+            if (required75 < 0) {
+                required75 = 0;
+            }
+
+        }
+
+
+        /*
+        Create result card
+        */
+
+        const card =
+            document.createElement("div");
+
+        card.className = "result-card";
+
+
+        card.innerHTML = `
+
+            <h3>${subject}</h3>
+
+            <div class="stat">
+                <span>Current Attendance</span>
+                <strong>
+                    ${currentPercentage.toFixed(2)}%
+                </strong>
+            </div>
+
+            <div class="progress">
+
+                <div
+                    class="progress-bar"
+                    style="width:
+                    ${Math.min(currentPercentage,100)}%"
+                ></div>
+
+            </div>
+
+            <div class="stat">
+                <span>Classes Conducted</span>
+                <strong>${conducted}</strong>
+            </div>
+
+            <div class="stat">
+                <span>Classes Attended</span>
+                <strong>${attended}</strong>
+            </div>
+
+            <div class="stat">
+                <span>Classes Remaining</span>
+                <strong>${remainingClasses}</strong>
+            </div>
+
+            <div class="stat">
+                <span>Classes Needed for 90%</span>
+                <strong>${required90}</strong>
+            </div>
+
+            <div class="stat">
+                <span>Classes Needed for 75%</span>
+                <strong>${required75}</strong>
+            </div>
+
+            <div class="stat">
+                <span>Maximum Possible Attendance</span>
+                <strong>
+                    ${possibleFinalPercentage.toFixed(2)}%
+                </strong>
+            </div>
+
+            <div class="status ${statusClass}">
+                ${status}
+            </div>
+
+        `;
+
+
+        /*
+        IRREVERSIBLE WARNING
+        */
+
+        if (
+            currentPercentage < 90 &&
+            possibleFinalPercentage < 90
+        ) {
+
+            const warning =
+                document.createElement("div");
+
+            warning.className = "irreversible";
+
+            warning.innerHTML = `
+
+                ⚠️ IRREVERSIBLE DETENTION ⚠️
+
+                <br><br>
+
+                Even if you attend every remaining
+                ${remainingClasses} class(es),
+                your attendance can only reach
+                ${possibleFinalPercentage.toFixed(2)}%.
+
+            `;
+
+            card.appendChild(warning);
+
+        }
+
+
+        resultContainer.appendChild(card);
+
+    });
+
+
+    /*
+    UPDATE SUMMARY
+    */
+
+    document.getElementById(
+        "totalSubjects"
+    ).textContent = subjects.length;
+
+
+    document.getElementById(
+        "totalRemaining"
+    ).textContent = totalRemaining;
+
+
+    document.getElementById(
+        "riskSubjects"
+    ).textContent = riskSubjects;
+
+
+    document.getElementById(
+        "below90"
+    ).textContent = below90;
+
+
+    /*
+    SHOW RESULTS
+    */
+
+    document.getElementById("results").classList.remove("hidden");
+
+}
+
+</script>
+
+</body>
+</html>
