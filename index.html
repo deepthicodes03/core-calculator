@@ -36,6 +36,16 @@ header p {
     color: #aeb8d4;
 }
 
+.info-banner {
+    background: #1a2f5f;
+    border-left: 4px solid #5b7cff;
+    padding: 15px 20px;
+    margin: 0;
+    color: #b9c3dc;
+    text-align: center;
+    font-size: 14px;
+}
+
 .container {
     max-width: 1100px;
     margin: auto;
@@ -221,6 +231,9 @@ footer {
 <header>
     <h1>⚡ The Core Calculator</h1>
     <p>Smart Attendance & Recovery Calculator</p>
+    <div class="info-banner">
+        📅 Semester Period: August 29 - November 29
+    </div>
 </header>
 
 <div class="container">
@@ -325,7 +338,7 @@ footer {
 </div>
 
 <footer>
-    The Core Calculator • Attendance Planning System
+    The Core Calculator • Attendance Planning System | Semester: Aug 29 - Nov 29
 </footer>
 
 
@@ -455,7 +468,7 @@ const timetable = {
 
 /*
 ====================================================
-SET TODAY'S DATE
+SET TODAY'S DATE & SEMESTER DATES
 ====================================================
 */
 
@@ -466,15 +479,14 @@ const today = new Date();
 
 todayInput.value = formatDate(today);
 
-
 /*
-Default future date = 30 days from today
+Semester End Date = November 29
 */
 
-let defaultFuture = new Date();
-defaultFuture.setDate(defaultFuture.getDate() + 30);
+let semesterEnd = new Date();
+semesterEnd.setFullYear(2026, 10, 29); // Month is 0-indexed, so 10 = November
 
-futureInput.value = formatDate(defaultFuture);
+futureInput.value = formatDate(semesterEnd);
 
 
 function formatDate(date) {
